@@ -7,7 +7,7 @@ contract CheckAccreditation {
 
     constructor() payable
     {
-        require(msg.sender == owner);
+        owner = msg.sender;
     }
 
     modifier onlyOwner
