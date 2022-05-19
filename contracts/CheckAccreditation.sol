@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.4.22 <0.9.0;
+pragma solidity >=0.8.00 <=0.8.14;
 
 contract CheckAccreditation {
     address owner;
@@ -10,9 +10,35 @@ contract CheckAccreditation {
         require(msg.sender == owner);
     }
 
-    function addBalance() public payable
+    modifier onlyOwner
     {
         require(msg.sender == owner);
+        _;
+    }
+
+    function changeOwner(address _newOwner) public onlyOwner
+    {
+        owner = _newOwner;
+    }
+
+    function addBalance() public payable onlyOwner
+    {
+
+    }
+    
+    function getBalance() view public returns(uint256)
+    {
+        return address(this).balance;
+    }
+
+    function getOwner() view public returns(address)
+    {
+        return owner;
+    }
+
+    function withdrawBalance() public onlyOwner
+    {
+        payable(msg.sender).transfer(address(this).balance);
     }
 
     function accreditCheck(uint256 _amount,uint256 _checkNumber, bytes memory _signature) public
@@ -24,6 +50,8 @@ contract CheckAccreditation {
         hash = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", hash));
 
         require(recoverSigner(hash,_signature)== owner);
+
+        payable(msg.sender).transfer(_amount);
     }
 
     function recoverSigner(bytes32 _hash, bytes memory _signature) internal pure returns(address)
