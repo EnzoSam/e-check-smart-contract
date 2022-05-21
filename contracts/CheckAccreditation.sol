@@ -12,7 +12,7 @@ contract CheckAccreditation {
 
     modifier onlyOwner
     {
-        require(msg.sender == owner);
+        require(msg.sender == owner, "owner invalido");
         _;
     }
 
@@ -49,7 +49,7 @@ contract CheckAccreditation {
         bytes32 hash = keccak256(abi.encodePacked(msg.sender,_amount, _checkNumber, address(this)));
         hash = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", hash));
 
-        require(recoverSigner(hash,_signature)== owner);
+        require(recoverSigner(hash,_signature) == owner);
 
         payable(msg.sender).transfer(_amount);
     }
