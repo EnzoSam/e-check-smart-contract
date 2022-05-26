@@ -44,7 +44,7 @@ contract CheckAccreditation {
     function accreditCheck(uint256 _amount,uint256 _checkNumber, bytes memory _signature) public
     {
         require(usedChecks[_checkNumber] == false, "El pago ya fue utilizado");
-        usedChecks[_checkNumber] = false;
+        usedChecks[_checkNumber] = true;
 
         bytes32 hash = keccak256(abi.encodePacked(msg.sender,_amount, _checkNumber, address(this)));
         hash = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", hash));
